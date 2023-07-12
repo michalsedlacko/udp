@@ -109,17 +109,18 @@ class UDP {
   Future<int> send(List<int> data, Endpoint remoteEndpoint) async {
     if (_socket == null || _closed) return -1;
 
-    return Future.microtask(() async {
-      var prevState = _socket!.broadcastEnabled;
+     return Future.microtask(() async {
+     
+      var prevState = _socket?.broadcastEnabled ?? false;
 
       if (remoteEndpoint.isBroadcast) {
-        _socket!.broadcastEnabled = true;
+        _socket?.broadcastEnabled = true;
       }
 
-      var _dataCount = _socket!
-          .send(data, remoteEndpoint.address!, remoteEndpoint.port!.value);
+      var _dataCount = _socket
+          ?.send(data, remoteEndpoint.address!, remoteEndpoint.port!.value)?? 0 ;
 
-      _socket!.broadcastEnabled = prevState;
+      _socket?.broadcastEnabled = prevState;
 
       return _dataCount;
     });
