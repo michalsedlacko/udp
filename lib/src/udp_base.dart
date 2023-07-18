@@ -36,6 +36,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:collection';
 
+import 'package:udp/src/datagram_socket_exception.dart';
+
 import 'udp_endpoint.dart';
 
 typedef DatagramCallback = void Function(Datagram?);
@@ -118,10 +120,14 @@ class UDP {
       }
 
       var _dataCount = _socket
-          ?.send(data, remoteEndpoint.address!, remoteEndpoint.port!.value)?? 0 ;
+          ?.send(data, remoteEndpoint.address!, remoteEndpoint.port!.value)?? -1 ;
 
-      _socket?.broadcastEnabled = prevState;
-
+      
+      try {
+        _socket?.broadcastEnabled = prevState;
+      } catch(e) {
+        throw DatagramSocketException(e, prevState, _socket?.broadcastEnabled);
+      }
       return _dataCount;
     });
   }
