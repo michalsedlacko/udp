@@ -124,7 +124,9 @@ class UDP {
 
       
       try {
-        _socket?.broadcastEnabled = prevState;
+        if (_socket?.broadcastEnabled != prevState) {
+          _socket?.broadcastEnabled = prevState;
+        }
       } catch(e) {
         throw DatagramSocketException(e, prevState, _socket?.broadcastEnabled);
       }
